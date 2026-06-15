@@ -7,523 +7,347 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
     />
     <title>A Question For You 💕</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;600&display=swap"
-      rel="stylesheet"
-    />
     <style>
-      /* Your existing CSS stays exactly the same */
-      :root {
-        --bg: #0e0608;
-        --surface: #1a0c10;
-        --rose: #8b1a2e;
-        --rose-glow: #c4294a;
-        --gold: #c9a84c;
-        --gold-soft: #e8d5a0;
-        --petal: #f5e6e8;
-        --text: #f0dde0;
-        --muted: #8a6a6e;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
+      * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
       }
+
       body {
-        background: var(--bg);
-        font-family: "Montserrat", sans-serif;
-        font-weight: 300;
-        color: var(--text);
+        background: linear-gradient(135deg, #1a0c10 0%, #0e0608 100%);
+        font-family: "Segoe UI", "Montserrat", system-ui, sans-serif;
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
         position: relative;
+        overflow: hidden;
       }
-      .music-control {
+
+      /* Floating hearts animation */
+      .heart {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1000;
-        background: rgba(139, 26, 46, 0.9);
-        border: 2px solid var(--gold);
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(4px);
-      }
-      .bg-petals {
-        position: fixed;
-        inset: 0;
+        bottom: -20px;
+        font-size: 20px;
+        animation: floatUp 8s linear infinite;
         pointer-events: none;
         z-index: 0;
-        overflow: hidden;
       }
-      .petal {
-        position: absolute;
-        width: 6px;
-        height: 10px;
-        background: var(--rose);
-        border-radius: 50% 0 50% 0;
-        opacity: 0;
-        animation: fall linear infinite;
-      }
-      @keyframes fall {
+
+      @keyframes floatUp {
         0% {
-          transform: translateY(-20px) rotate(0deg);
-          opacity: 0;
-        }
-        10% {
-          opacity: 0.3;
-        }
-        90% {
-          opacity: 0.2;
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
         }
         100% {
-          transform: translateY(110vh) rotate(360deg);
+          transform: translateY(-100vh) rotate(360deg);
           opacity: 0;
         }
       }
-      .gold-line {
+
+      .game-container {
+        background: rgba(30, 15, 20, 0.95);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 600px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(201, 168, 76, 0.2);
+        border: 1px solid rgba(201, 168, 76, 0.3);
+        z-index: 1;
+        position: relative;
+      }
+
+      h1 {
+        color: #e8d5a0;
+        font-size: 24px;
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+      }
+
+      .question-counter {
+        color: #8a6a6e;
+        font-size: 14px;
+        margin: 20px 0 10px;
+        letter-spacing: 2px;
+      }
+
+      .question-text {
+        color: #f5e6e8;
+        font-size: 28px;
+        margin: 20px 0;
+        line-height: 1.4;
+        min-height: 120px;
+        font-style: italic;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        margin: 20px 0;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #8b1a2e, #c9a84c);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin: 30px 0;
+        position: relative;
+      }
+
+      .btn-yes {
+        background: linear-gradient(135deg, #8b1a2e, #c4294a);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 18px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+
+      .btn-yes:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(196, 41, 74, 0.5);
+      }
+
+      .btn-no {
+        background: rgba(139, 26, 46, 0.6);
+        color: #e8d5a0;
+        border: 2px solid #c9a84c;
+        padding: 15px 40px;
+        font-size: 18px;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.05s linear;
+        position: fixed;
+        font-weight: bold;
+        letter-spacing: 2px;
+        backdrop-filter: blur(5px);
+      }
+
+      .reward-overlay {
+        display: none;
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        height: 2px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--gold),
-          transparent
-        );
-        z-index: 10;
-      }
-      .card {
-        position: relative;
-        z-index: 2;
-        background: var(--surface);
-        border: 1px solid rgba(201, 168, 76, 0.25);
-        border-radius: 4px;
-        padding: 56px 64px 52px;
-        max-width: 620px;
-        width: 90vw;
-        text-align: center;
-        box-shadow: 0 0 60px rgba(139, 26, 46, 0.2);
-      }
-      .card::before,
-      .card::after {
-        content: "❧";
-        position: absolute;
-        color: var(--gold);
-        opacity: 0.35;
-        font-size: 1.4rem;
-      }
-      .card::before {
-        top: 16px;
-        left: 20px;
-      }
-      .card::after {
-        bottom: 16px;
-        right: 20px;
-        transform: rotate(180deg);
-      }
-      .eyebrow {
-        font-family: "Montserrat", sans-serif;
-        font-size: 0.62rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--gold);
-        margin-bottom: 20px;
-      }
-      .q-counter {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 0.85rem;
-        color: var(--muted);
-        margin-bottom: 12px;
-      }
-      .question-text {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 2rem;
-        font-weight: 300;
-        font-style: italic;
-        line-height: 1.45;
-        color: var(--petal);
-        margin-bottom: 44px;
-        min-height: 96px;
-      }
-      .divider {
-        width: 60px;
-        height: 1px;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          var(--gold),
-          transparent
-        );
-        margin: 0 auto 40px;
-      }
-      .btn-row {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 80px;
-      }
-      .btn-yes {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 600;
-        font-size: 1rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        background: linear-gradient(135deg, var(--rose), var(--rose-glow));
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        border-radius: 50px;
-        padding: 16px 48px;
-        box-shadow: 0 4px 20px rgba(196, 41, 74, 0.5);
-        transition: all 0.1s ease;
-        position: relative;
-        z-index: 5;
-      }
-      .btn-yes.grow-animation {
-        animation: massiveGrow 0.3s ease-out forwards;
-      }
-      @keyframes massiveGrow {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.4);
-          box-shadow: 0 0 30px rgba(196, 41, 74, 0.8);
-        }
-        100% {
-          transform: scale(1.2);
-        }
-      }
-      .btn-yes.permanent-grow {
-        transform: scale(1.2);
-      }
-      .btn-yes.permanent-grow-2x {
-        transform: scale(1.4);
-      }
-      .btn-yes.permanent-grow-3x {
-        transform: scale(1.6);
-      }
-      .btn-no {
-        background: rgba(139, 26, 46, 0.8);
-        color: var(--gold-soft);
-        border: 2px solid var(--gold);
-        font-family: "Montserrat", sans-serif;
-        font-weight: 600;
-        font-size: 0.9rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        cursor: pointer;
-        border-radius: 50px;
-        padding: 14px 38px;
-        position: fixed;
-        transition: all 0.02s linear;
-        z-index: 999;
-        white-space: nowrap;
-      }
-      .progress-wrap {
-        margin-top: 36px;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 1px;
-        overflow: hidden;
-      }
-      .progress-bar {
+        width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, var(--rose), var(--gold));
-        transition: width 0.5s ease;
-      }
-      #reward-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 200;
-        background: rgba(10, 4, 6, 0.95);
-        backdrop-filter: blur(12px);
-        align-items: center;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 1000;
         justify-content: center;
+        align-items: center;
         flex-direction: column;
         gap: 20px;
       }
-      #reward-overlay.show {
+
+      .reward-overlay.show {
         display: flex;
-        animation: fadeIn 0.4s ease;
       }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
+
+      .reward-img {
+        max-width: 80%;
+        max-height: 60vh;
+        border-radius: 10px;
+        border: 3px solid #c9a84c;
+        box-shadow: 0 0 30px rgba(201, 168, 76, 0.3);
       }
-      #reward-img {
-        max-width: min(72vw, 500px);
-        max-height: 65vh;
-        object-fit: contain;
-        border: 2px solid var(--gold);
-        border-radius: 8px;
-        box-shadow: 0 0 80px rgba(196, 41, 74, 0.6);
-        animation: popIn 0.4s ease;
-      }
-      @keyframes popIn {
-        from {
-          transform: scale(0.7);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
+
       .reward-caption {
-        font-family: "Cormorant Garamond", serif;
-        font-size: 1.5rem;
-        color: var(--gold-soft);
+        color: #e8d5a0;
+        font-size: 24px;
+        font-style: italic;
       }
+
       .reward-timer {
-        font-size: 0.7rem;
-        letter-spacing: 0.2em;
-        color: var(--muted);
+        color: #8a6a6e;
+        font-size: 14px;
       }
-      #done-screen {
+
+      .done-screen {
         display: none;
-        text-align: center;
       }
-      #done-screen.show {
+
+      .done-screen.show {
         display: block;
       }
+
       .done-heart {
-        font-size: 4rem;
-        animation: heartPulse 1s ease-in-out infinite;
+        font-size: 60px;
+        animation: pulse 1s infinite;
       }
-      @keyframes heartPulse {
+
+      @keyframes pulse {
         0%,
         100% {
           transform: scale(1);
         }
         50% {
           transform: scale(1.2);
-          text-shadow: 0 0 20px var(--rose);
         }
       }
-      .attempt-counter {
+
+      .stats {
+        position: fixed;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+        color: #c9a84c;
+        font-family: monospace;
+      }
+
+      .music-control {
         position: fixed;
         bottom: 20px;
-        left: 20px;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        color: var(--gold-soft);
-        border: 1px solid var(--gold);
-      }
-      .size-indicator {
-        position: fixed;
-        top: 20px;
         right: 20px;
-        z-index: 1000;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.7rem;
-        color: var(--gold-soft);
+        background: rgba(139, 26, 46, 0.8);
+        border: 2px solid #c9a84c;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 24px;
+        z-index: 100;
       }
-      @keyframes shrinkWobble {
-        0% {
-          transform: scale(var(--scale)) rotate(0deg);
-        }
-        50% {
-          transform: scale(calc(var(--scale) * 0.7)) rotate(-3deg);
-        }
-        100% {
-          transform: scale(var(--scale)) rotate(0deg);
-        }
-      }
-      @keyframes floatUp {
-        0% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        100% {
-          opacity: 0;
-          transform: translateY(-40px);
-        }
-      }
-      @media (max-width: 768px) {
-        .card {
-          padding: 32px 24px 36px;
+
+      @media (max-width: 600px) {
+        .game-container {
+          padding: 20px;
         }
         .question-text {
-          font-size: 1.5rem;
+          font-size: 20px;
         }
         .btn-yes,
         .btn-no {
-          font-size: 0.75rem;
-          padding: 12px 28px;
+          padding: 10px 20px;
+          font-size: 14px;
         }
       }
     </style>
   </head>
   <body>
-    <div class="gold-line"></div>
-    <div class="bg-petals" id="petals"></div>
-    <div class="music-control" id="musicControl">🔇</div>
-    <div class="attempt-counter" id="attemptCounter">💢 NO shrunk: 0 times</div>
-    <div class="size-indicator" id="sizeIndicator">📏 NO size: 100%</div>
-
-    <div id="reward-overlay">
-      <img id="reward-img" src="" alt="A memory of us" />
-      <div class="reward-caption" id="reward-caption">I knew it 💕</div>
-      <div class="reward-timer" id="reward-timer">continuing in 3…</div>
-    </div>
-
-    <div class="card">
-      <div class="eyebrow">A question for you, my love HAZEL</div>
-      <div id="question-screen">
-        <div class="q-counter" id="q-counter">Question 1 of ?</div>
-        <div class="question-text" id="question-text">Loading...</div>
-        <div class="divider"></div>
-        <div class="btn-row">
-          <button class="btn-yes" id="btn-yes">✦ YES ✦</button>
-        </div>
-        <div class="progress-wrap">
-          <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
-        </div>
+    <div class="game-container">
+      <h1>💕 A QUESTION FOR YOU, MY LOVE HAZEL 💕</h1>
+      <div class="question-counter" id="counter">Question 1 of --</div>
+      <div class="question-text" id="question">Loading questions...</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
       </div>
-      <div id="done-screen">
+      <div class="buttons">
+        <button class="btn-yes" id="yesBtn">✦ YES ✦</button>
+      </div>
+      <div class="done-screen" id="doneScreen">
         <div class="done-heart">💕</div>
-        <div class="done-title">You answered perfectly,<br />as always.</div>
-        <div class="done-sub">Thank you for being you.</div>
+        <div class="question-text">You answered perfectly, as always.</div>
+        <p>Thank you for being you.</p>
       </div>
     </div>
 
-    <button class="btn-no" id="btn-no">NO</button>
+    <button class="btn-no" id="noBtn">NO</button>
+    <div class="music-control" id="musicBtn">🔇</div>
+    <div class="stats" id="stats">NO size: 100%</div>
+
+    <div class="reward-overlay" id="rewardOverlay">
+      <img class="reward-img" id="rewardImg" src="" alt="Our memory" />
+      <div class="reward-caption" id="rewardCaption">I knew it 💕</div>
+      <div class="reward-timer" id="rewardTimer">continuing in 3...</div>
+    </div>
 
     <script>
-      // Petals
-      const petalContainer = document.getElementById("petals");
-      for (let i = 0; i < 35; i++) {
-        const p = document.createElement("div");
-        p.className = "petal";
-        p.style.cssText = `
-          left: ${Math.random() * 100}vw;
-          width: ${4 + Math.random() * 8}px;
-          height: ${8 + Math.random() * 12}px;
-          animation-duration: ${6 + Math.random() * 12}s;
-          animation-delay: ${-Math.random() * 15}s;
-        `;
-        petalContainer.appendChild(p);
+      // Create floating hearts
+      function createHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = ["💕", "💖", "💗", "💓", "💝"][
+          Math.floor(Math.random() * 5)
+        ];
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = 4 + Math.random() * 4 + "s";
+        heart.style.fontSize = 10 + Math.random() * 20 + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 8000);
       }
+      setInterval(createHeart, 1000);
 
-      // Music Player
-      class MusicPlayer {
-        constructor() {
-          this.audio = null;
-          this.isPlaying = false;
-          this.init();
-        }
-        init() {
-          this.audio = new Audio();
-          this.audio.src = "/music/track1.mp3";
-          this.audio.loop = true;
-          this.audio.volume = 0.3;
-          this.audio.addEventListener("error", () =>
-            console.log("Add music file to /music/track1.mp3"),
-          );
-          document
-            .getElementById("musicControl")
-            .addEventListener("click", () => this.toggle());
-        }
-        async play() {
-          try {
-            await this.audio.play();
-            this.isPlaying = true;
-            document.getElementById("musicControl").innerHTML = "🎵";
-          } catch (e) {
-            console.log("Click to start music");
-          }
-        }
-        pause() {
-          this.audio.pause();
-          this.isPlaying = false;
-          document.getElementById("musicControl").innerHTML = "🔇";
-        }
-        toggle() {
-          this.isPlaying ? this.pause() : this.play();
-        }
-        startOnInteraction() {
-          if (!this.isPlaying) this.play();
-        }
-      }
-
-      const music = new MusicPlayer();
-
-      // Game State
+      // Game variables
       let questions = [];
       let images = [];
-      let current = 0;
+      let currentQuestion = 0;
       let usedImages = [];
       let shrinkCount = 0;
-      let yesClickCount = 0;
-
-      // NEW: For captions in order
+      let yesCount = 0;
       let captionIndex = 0;
+      let musicPlaying = false;
+      let audio = null;
 
-      const noBtn = document.getElementById("btn-no");
-      const yesBtn = document.getElementById("btn-yes");
+      // DOM elements
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+      const counter = document.getElementById("counter");
+      const questionEl = document.getElementById("question");
+      const progress = document.getElementById("progress");
+      const rewardOverlay = document.getElementById("rewardOverlay");
+      const rewardImg = document.getElementById("rewardImg");
+      const rewardCaption = document.getElementById("rewardCaption");
+      const rewardTimer = document.getElementById("rewardTimer");
+      const doneScreen = document.getElementById("doneScreen");
+      const stats = document.getElementById("stats");
+      const musicBtn = document.getElementById("musicBtn");
 
-      // Load questions
+      // Load questions from questions.txt
       async function loadQuestions() {
         try {
-          const response = await fetch("questions.txt");
+          const response = await fetch("/questions.txt");
           const text = await response.text();
           questions = text
-            .split("\n")
-            .map((q) => q.trim())
-            .filter((q) => q.length > 0);
-
+            .split(/\r?\n/)
+            .filter((line) => line.trim().length > 0);
+          console.log("Loaded questions:", questions.length);
           if (questions.length === 0) {
             questions = [
               "Do you love me? 💕",
               "Do I make you happy? ✨",
               "Will you be my Valentine? 🌹",
+              "Do you want to travel with me? ✈️",
+              "Am I your favorite person? 💖",
             ];
           }
-
-          console.log(`📋 Loaded ${questions.length} questions`);
-          showQuestion();
+          startGame();
         } catch (error) {
           console.error("Error loading questions:", error);
           questions = [
             "Do you love me? 💕",
             "Do I make you happy? ✨",
             "Will you be my Valentine? 🌹",
+            "Do you want to travel with me? ✈️",
+            "Am I your favorite person? 💖",
           ];
-          showQuestion();
+          startGame();
         }
       }
 
-      // Load images
+      // Load images - list your images here
       function loadImages() {
-        const imageFiles = [
+        const imageNames = [
           "photo (1).jpeg",
           "photo (2).jpeg",
           "photo (3).jpeg",
@@ -537,145 +361,96 @@
           "photo (11).jpeg",
         ];
 
-        images = [];
-        let loadedCount = 0;
-        let errorCount = 0;
-
-        imageFiles.forEach((filename) => {
-          const imgPath = `/images/${filename}`;
-          const testImg = new Image();
-          testImg.onload = () => {
-            loadedCount++;
-            console.log(
-              `✅ Image ${loadedCount}/${imageFiles.length}: ${filename}`,
-            );
-          };
-          testImg.onerror = () => {
-            errorCount++;
-            console.error(`❌ FAILED: ${imgPath} - File not found!`);
-          };
-          testImg.src = imgPath;
-          images.push(imgPath);
-        });
-
+        images = imageNames.map((name) => `/images/${name}`);
         usedImages = [...images];
-        console.log(`📸 Total images configured: ${images.length}`);
-        setTimeout(() => {
-          if (errorCount > 0) {
-            console.warn(
-              `⚠️ ${errorCount} images failed to load. Check filenames match exactly!`,
-            );
-          }
-        }, 1000);
+        console.log("Loaded images:", images.length);
       }
 
-      // pickImage - cycles through all images
-      function pickImage() {
-        if (usedImages.length === 0) {
-          console.log("🔄 All images shown, resetting for another round!");
-          usedImages = [...images];
-        }
+      // Captions in order
+      const captions = [
+        "💕 I knew it!",
+        "✨ You're amazing!",
+        "🌹 My heart belongs to you",
+        "💫 Forever and always",
+        "🥰 You make me so happy",
+        "💞 Every time, yes!",
+        "🥰 HAZEL is the BEST!",
+        "🌹 My Sexy HAZEL!!!",
+        "💖 HAZEL is my everything",
+        "💕 Will Always Love YOU Hazelina!",
+        "✨✨✨ WE WILL MEET AGAIN MY LOVE",
+      ];
 
-        if (usedImages.length === 0) {
-          console.error("No images available!");
-          return null;
-        }
-
-        const idx = Math.floor(Math.random() * usedImages.length);
-        const selectedImage = usedImages[idx];
-        usedImages.splice(idx, 1);
-
-        const shownCount = images.length - usedImages.length;
-        console.log(
-          `🖼️ Showing image ${shownCount} of ${images.length}: ${selectedImage}`,
-        );
-        return selectedImage;
-      }
-
-      // NEW: Get next caption in order (not random)
       function getNextCaption() {
-        const captions = [
-          "💕 I knew it!",
-          "✨ You're amazing!",
-          "🌹 My heart belongs to you",
-          "💫 Forever and always",
-          "🥰 You make me so happy",
-          "💞 Every time, yes!",
-          "🥰 HAZEL is the BEST!",
-          "🌹 My Sexy HAZEL!!!",
-          "💖 HAZEL is my everything",
-          "💕 Will Always Love YOU Hazelina!",
-          "✨✨✨ WE WILL MEET AGAIN MY LOVE",
-        ];
-
         const caption = captions[captionIndex % captions.length];
         captionIndex++;
-        console.log(`💬 Caption ${captionIndex}: ${caption}`);
         return caption;
       }
 
-      function showQuestion() {
-        if (current >= questions.length) {
-          document.getElementById("question-screen").style.display = "none";
-          document.getElementById("done-screen").classList.add("show");
-          noBtn.style.display = "none";
-          document.getElementById("progress-bar").style.width = "100%";
-          return;
+      function pickImage() {
+        if (usedImages.length === 0) {
+          usedImages = [...images];
         }
+        if (usedImages.length === 0) return null;
+        const idx = Math.floor(Math.random() * usedImages.length);
+        const image = usedImages[idx];
+        usedImages.splice(idx, 1);
+        return image;
+      }
 
-        const total = questions.length;
-        document.getElementById("q-counter").textContent = `Question ${
-          current + 1
-        } of ${total}`;
-        document.getElementById("question-text").textContent =
-          questions[current];
-        document.getElementById("progress-bar").style.width =
-          `${(current / total) * 100}%`;
-
-        shrinkCount = 0;
-        updateNoButtonVisual();
+      function startGame() {
+        currentQuestion = 0;
+        showQuestion();
         placeNoButton();
       }
 
-      function updateNoButtonVisual() {
+      function showQuestion() {
+        if (currentQuestion >= questions.length) {
+          // Game complete
+          document.querySelector(".buttons").style.display = "none";
+          doneScreen.classList.add("show");
+          noBtn.style.display = "none";
+          return;
+        }
+
+        counter.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+        questionEl.textContent = questions[currentQuestion];
+        progress.style.width = `${(currentQuestion / questions.length) * 100}%`;
+
+        // Reset NO button size
+        shrinkCount = 0;
+        updateNoButtonSize();
+      }
+
+      function updateNoButtonSize() {
         const scale = Math.max(0.15, 1 - shrinkCount * 0.085);
         noBtn.style.transform = `scale(${scale})`;
-        noBtn.style.setProperty("--scale", scale);
-        document.getElementById("sizeIndicator").innerHTML =
-          `📏 NO size: ${Math.floor(scale * 100)}%`;
+        stats.innerHTML = `NO size: ${Math.floor(scale * 100)}%`;
 
-        if (scale < 0.4) noBtn.style.background = "rgba(100,20,35,0.5)";
-        else if (scale < 0.6) noBtn.style.background = "rgba(139,26,46,0.6)";
-        else noBtn.style.background = "rgba(139,26,46,0.8)";
+        if (scale < 0.4) {
+          noBtn.style.background = "rgba(100,20,35,0.4)";
+        } else if (scale < 0.6) {
+          noBtn.style.background = "rgba(139,26,46,0.6)";
+        } else {
+          noBtn.style.background = "rgba(139,26,46,0.8)";
+        }
       }
 
       function shrinkNoButton() {
         shrinkCount++;
-        updateNoButtonVisual();
-        document.getElementById("attemptCounter").innerHTML =
-          `💢 NO shrunk: ${shrinkCount} times`;
-        noBtn.style.animation = "shrinkWobble 0.15s ease";
-        setTimeout(() => (noBtn.style.animation = ""), 150);
+        updateNoButtonSize();
       }
 
       function growYesButton() {
-        yesClickCount++;
-        yesBtn.classList.remove(
-          "permanent-grow",
-          "permanent-grow-2x",
-          "permanent-grow-3x",
-        );
+        yesCount++;
+        yesBtn.style.transform = `scale(${1 + Math.min(0.6, yesCount * 0.05)})`;
+        yesBtn.style.transition = "transform 0.1s ease";
 
-        if (yesClickCount >= 6) {
-          yesBtn.classList.add("permanent-grow-3x");
-        } else if (yesClickCount >= 3) {
-          yesBtn.classList.add("permanent-grow-2x");
-        } else if (yesClickCount >= 1) {
-          yesBtn.classList.add("permanent-grow");
-        }
-
-        yesBtn.classList.add("grow-animation");
-        setTimeout(() => yesBtn.classList.remove("grow-animation"), 300);
+        // Flash effect
+        yesBtn.style.boxShadow = "0 0 30px rgba(196,41,74,0.8)";
+        setTimeout(() => {
+          yesBtn.style.boxShadow = "0 0 10px rgba(196,41,74,0.5)";
+        }, 200);
       }
 
       function placeNoButton() {
@@ -683,115 +458,155 @@
         let left = yesRect.right + 30;
         let top = yesRect.top;
 
-        if (left + 100 > window.innerWidth - 30) {
+        if (left + 100 > window.innerWidth - 20) {
           left = yesRect.left - 130;
         }
-        top = Math.max(30, Math.min(window.innerHeight - 60, top));
-        left = Math.max(30, Math.min(window.innerWidth - 130, left));
+        top = Math.max(20, Math.min(window.innerHeight - 60, top));
+        left = Math.max(20, Math.min(window.innerWidth - 100, left));
 
         noBtn.style.left = left + "px";
         noBtn.style.top = top + "px";
       }
 
-      // Mouse tracking
+      function showReward() {
+        const imgSrc = pickImage();
+        if (imgSrc) {
+          rewardImg.src = imgSrc;
+          rewardImg.style.display = "block";
+        } else {
+          rewardImg.style.display = "none";
+        }
+
+        rewardCaption.textContent = getNextCaption();
+        rewardOverlay.classList.add("show");
+
+        let seconds = 3;
+        rewardTimer.textContent = `continuing in ${seconds}...`;
+
+        const interval = setInterval(() => {
+          seconds--;
+          if (seconds <= 0) {
+            clearInterval(interval);
+            rewardOverlay.classList.remove("show");
+            currentQuestion++;
+            showQuestion();
+          } else {
+            rewardTimer.textContent = `continuing in ${seconds}...`;
+          }
+        }, 1000);
+      }
+
+      // Mouse tracking for NO button
       document.addEventListener("mousemove", (e) => {
-        if (current >= questions.length) return;
-        const noRect = noBtn.getBoundingClientRect();
-        const dx = e.clientX - (noRect.left + noRect.width / 2);
-        const dy = e.clientY - (noRect.top + noRect.height / 2);
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (currentQuestion >= questions.length) return;
+
+        const rect = noBtn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dist = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
         if (dist < 120) {
-          if (dist < 80 && shrinkCount < 12) shrinkNoButton();
+          // Shrink when close
+          if (dist < 80 && shrinkCount < 12) {
+            shrinkNoButton();
+          }
 
-          const angle = Math.atan2(dy, dx);
-          const escapeForce = (120 - dist) * 2;
-          let newLeft =
-            noRect.left + Math.cos(angle + Math.PI) * (escapeForce + 50);
-          let newTop =
-            noRect.top + Math.sin(angle + Math.PI) * (escapeForce + 50);
+          // Move away
+          const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+          const force = (120 - dist) * 2;
+          let newLeft = rect.left + Math.cos(angle + Math.PI) * (force + 50);
+          let newTop = rect.top + Math.sin(angle + Math.PI) * (force + 50);
 
           newLeft = Math.max(
             10,
-            Math.min(window.innerWidth - noRect.width - 10, newLeft),
+            Math.min(window.innerWidth - rect.width - 10, newLeft),
           );
           newTop = Math.max(
             10,
-            Math.min(window.innerHeight - noRect.height - 10, newTop),
+            Math.min(window.innerHeight - rect.height - 10, newTop),
           );
 
           noBtn.style.left = newLeft + "px";
           noBtn.style.top = newTop + "px";
 
-          if (dist < 80 && Math.random() > 0.7) growYesButton();
+          if (dist < 80 && Math.random() > 0.7) {
+            growYesButton();
+          }
         }
       });
 
+      // NO button click
       noBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        if (current >= questions.length) return;
-        for (let i = 0; i < 3; i++) setTimeout(() => shrinkNoButton(), i * 30);
+        e.stopPropagation();
+        if (currentQuestion >= questions.length) return;
+
+        shrinkNoButton();
+        shrinkNoButton();
+        shrinkNoButton();
         growYesButton();
         placeNoButton();
       });
 
-      function showReward() {
-        const overlay = document.getElementById("reward-overlay");
-        const img = document.getElementById("reward-img");
-        const captionEl = document.getElementById("reward-caption");
-        const timerEl = document.getElementById("reward-timer");
-        const imgSrc = pickImage();
-
-        if (imgSrc) {
-          img.src = imgSrc;
-          img.style.display = "block";
-        } else {
-          img.style.display = "none";
-          console.warn("No image available to show!");
-        }
-
-        // Use the next caption in order instead of random
-        captionEl.textContent = getNextCaption();
-        overlay.classList.add("show");
-
-        let secs = 3;
-        timerEl.textContent = `continuing in ${secs}…`;
-        const interval = setInterval(() => {
-          secs--;
-          if (secs <= 0) {
-            clearInterval(interval);
-            overlay.classList.remove("show");
-            current++;
-            showQuestion();
-          } else {
-            timerEl.textContent = `continuing in ${secs}…`;
-          }
-        }, 1000);
-      }
-
-      document.getElementById("btn-yes").addEventListener("click", () => {
-        if (current >= questions.length) return;
+      // YES button click
+      yesBtn.addEventListener("click", () => {
+        if (currentQuestion >= questions.length) return;
         showReward();
         growYesButton();
         if (shrinkCount > 0) {
           shrinkCount = Math.max(0, shrinkCount - 1);
-          updateNoButtonVisual();
+          updateNoButtonSize();
         }
       });
 
-      // Initialize
-      window.addEventListener("load", () => {
-        loadImages();
-        loadQuestions();
-        setTimeout(() => placeNoButton(), 100);
-        document.body.addEventListener(
-          "click",
-          () => music.startOnInteraction(),
-          { once: true },
+      // Music player
+      function initMusic() {
+        audio = new Audio("/music/track1.mp3");
+        audio.loop = true;
+        audio.volume = 0.3;
+        audio.addEventListener("error", () =>
+          console.log("Music file not found. Add /music/track1.mp3"),
         );
+      }
+
+      musicBtn.addEventListener("click", () => {
+        if (!audio) initMusic();
+        if (musicPlaying) {
+          audio.pause();
+          musicPlaying = false;
+          musicBtn.innerHTML = "🔇";
+        } else {
+          audio.play().catch((e) => console.log("Playback failed"));
+          musicPlaying = true;
+          musicBtn.innerHTML = "🎵";
+        }
       });
 
-      window.addEventListener("resize", () => placeNoButton());
+      // Start music on first click anywhere
+      document.body.addEventListener(
+        "click",
+        () => {
+          if (!musicPlaying && !audio) {
+            initMusic();
+            audio.play().catch((e) => console.log("User interaction needed"));
+            musicPlaying = true;
+            musicBtn.innerHTML = "🎵";
+          }
+        },
+        { once: true },
+      );
+
+      // Handle window resize
+      window.addEventListener("resize", () => {
+        placeNoButton();
+      });
+
+      // Initialize everything
+      loadImages();
+      loadQuestions();
+
+      // Set initial position
+      setTimeout(() => placeNoButton(), 100);
     </script>
   </body>
 </html>

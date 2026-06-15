@@ -2,21 +2,30 @@
  "version": 2,
  "routes": [
   {
-   "src": "/(.*)",
+   "src": "/",
    "dest": "/index.html"
+  },
+  {
+   "src": "/(.*)",
+   "dest": "/$1"
   }
  ],
  "headers": [
   {
-   "source": "/(.*)",
+   "source": "/(.*)\\.html",
    "headers": [
     {
-     "key": "X-Content-Type-Options",
-     "value": "nosniff"
-    },
+     "key": "Content-Type",
+     "value": "text/html; charset=UTF-8"
+    }
+   ]
+  },
+  {
+   "source": "/(.*)\\.txt",
+   "headers": [
     {
-     "key": "Cache-Control",
-     "value": "public, max-age=0, must-revalidate"
+     "key": "Content-Type",
+     "value": "text/plain; charset=UTF-8"
     }
    ]
   }
